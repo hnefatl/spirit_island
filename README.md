@@ -29,7 +29,7 @@ Download your results to a csv file to browse and manipulate in any other way yo
 
 1. Then run the `rocker/shiny-verse` webserver, hosting the application:
 
-    ```dockerfile
+    ```yaml
     shiny:
         image: rocker/shiny-verse
         restart: unless-stopped
