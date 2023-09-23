@@ -23,11 +23,12 @@ Download your results to a csv file to browse and manipulate in any other way yo
 
 Can host it with rocker/shiny-verse
 
-```
+```dockerfile
 shiny:
     image: rocker/shiny-verse
     restart: unless-stopped
     user: root
+    build: https://github.com/hnefatl/spirit_island
     command: >
       sh -c "Rscript /srv/shiny-server/spirit_island/install_packages.R &&
              chroot --userspec=shiny / /init" 
