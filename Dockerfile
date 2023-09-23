@@ -2,8 +2,11 @@ FROM rocker/shiny-verse
 
 RUN apt-get -y update && apt-get -y install \
     git
+RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
 
-WORKDIR /srv/shiny-server
+WORKDIR /install
 
-#RUN git clone https://github.com/2cjenn/spirit_island .
-#RUN Rscript install_packages.R
+# Install the packages as part of the container, rather than at runtime.
+COPY renv.lock renv.lock
+ENV RENV_PATHS_LIBRARY renv/library
+RUN R -e "renv::restore()"

@@ -21,18 +21,23 @@ Download your results to a csv file to browse and manipulate in any other way yo
 
 # Docker compose
 
-Can host it with rocker/shiny-verse
+1. First clone the application to a persistent location on the host (state is saved to this location):
 
-```dockerfile
-shiny:
-    image: rocker/shiny-verse
-    restart: unless-stopped
-    user: root
-    build: https://github.com/hnefatl/spirit_island
-    command: >
-      sh -c "Rscript /srv/shiny-server/spirit_island/install_packages.R &&
-             chroot --userspec=shiny / /init" 
-    volumes:
-      - "/mnt/user/shiny/logs:/var/log/shiny-server"
-      - "/mnt/user/shiny/mountpoints/apps:/srv/shiny-server"
-```
+   ```sh
+   $ git clone https://github.com/2cjenn/spirit_island /mnt/user/shiny/mountponts/apps/spirit_island
+   ```
+
+1. Then run the `rocker/shiny-verse` webserver, hosting the application:
+
+    ```dockerfile
+    shiny:
+        image: rocker/shiny-verse
+        restart: unless-stopped
+        # Build an image using the repo's docker file, to install dependencies all at once
+        # at buildtime, rather than at runtime.
+        build:
+          - context: "/mnt/user/shiny/mountpoints/apps/spirit_island"
+        volumes:
+          - "/mnt/user/shiny/logs:/var/log/shiny-server"
+          - "/mnt/user/shiny/mountpoints/apps/spirit_island:/srv/shiny-server/spirit_island"
+    ```
